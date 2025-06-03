@@ -74,3 +74,4 @@ log_config = dict(
         dict(type='TextLoggerHook', by_epoch=False),
         dict(type='TensorboardLoggerHook')
     ])
+find_unused_parameters = True
