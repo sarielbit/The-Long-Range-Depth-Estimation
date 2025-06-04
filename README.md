@@ -36,7 +36,7 @@ Illustration: Dual-branch Encoder (CNN + Transformer), CSF Fusion Module, DSUB &
 | :------------ | :--------- | :-------- | :--------------------------------------------------------- |
 | **KITTI**     | **0.053**  | **2.128** |                                                            |
 | **NYU-Depth** | **0.094**  | **0.329** |                                                            |
-| **SUN RGB-D** | **0.140**  | **0.417** | Using NYU pre-trained weights, shows strong generalization |
+| **SUN RGB-D** | **0.142**  | **0.433** | Using NYU pre-trained weights, shows strong generalization |
 
 ---
 
@@ -156,7 +156,7 @@ bash tools/dist_train.sh ${CONFIG_FILE} ${GPU_NUM} [optional arguments]
 **Example:**
 
 ```bash
-bash ./tools/dist_train.sh configs/long_rangedepth/swinl_w7_22k_nyu.py 2 --work-dir work_dirs/saves/long_rangedepth/swinl_w7_22k_nyu
+bash ./tools/dist_train.sh configs/long_rangedepth/swinl_w7_22k_kitti.py 3 --work-dir work_dirs/saves/long_rangedepth/swinl_w7_22k_kitti
 ```
 
 ### 🦪 Inference & Testing
@@ -170,9 +170,9 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [--out ${RESULT_FILE}] [-
 **Example:**
 
 ```bash
-python tools/test.py configs/long_rangedepth/swinl_22k_w7_nyu.py \
-checkpoints/swinl_22k_w7_nyu.pth \
---show-dir swinl_22k_w7_nyu_results
+python tools/test.py configs/long_rangedepth/swinl_22k_w7_kitti.py \
+checkpoints/swinl_22k_w7_kitti.pth \
+--show-dir swinl_22k_w7_kitti_results
 ```
 
 ---
