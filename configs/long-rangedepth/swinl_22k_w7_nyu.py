@@ -19,7 +19,7 @@ model = dict(
         embedding_dim=512,
         scales=[1, 1, 1, 1, 1]),
     decode_head=dict(
-        type='DenseDepthHead',
+        type='DenseDepthHead1',
         act_cfg=dict(type='LeakyReLU', inplace=True),
         in_channels=[64, 192, 384, 768, 1536],
         up_sample_channels=[64, 192, 384, 768, 1536],
