@@ -185,7 +185,7 @@ If you find this work useful in your research, please consider citing:
 ```bibtex
 @misc{thelongrangedepth2025,
   title={The Long-Range Depth Estimation Framework},
-  author={Your Name},
+  author={sarielbit},
   year={2025},
   note={https://github.com/your-repo/The-Long-Range-Depth-Estimation}
 }
@@ -199,8 +199,3 @@ For questions and issues, feel free to open an [Issue](https://github.com/your-r
 
 ---
 
-## 📌 To-Do
-
-* [x] Code Refactoring
-* [ ] Add Demonstration Videos
-* [ ] Improve Documentation
