@@ -139,7 +139,7 @@ class UpSample(nn.Sequential):
 
     def forward(self, x, concat_with):
         up_x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
-        # 根据up_x的通道数选择对应的MEEM实例进行特征增强
+       
         if up_x.shape[1] == 1536:
             up_x1 = self.feature_enhancer_1536(up_x)
         elif up_x.shape[1] == 768:
@@ -227,7 +227,7 @@ class DenseDepthHead(DepthBaseDecodeHead):
         
         self.msa_modules = nn.ModuleList([MSA(ch) for ch in self.in_channels])
         
-        #self.msa_module = MSA(self.up_sample_channels[-1])  # 使用最后一层的通道数
+        
 
     def forward(self, inputs, img_metas):
         """Forward function."""
@@ -268,10 +268,6 @@ class DenseDepthHead(DepthBaseDecodeHead):
             msa_module = self.msa_modules[index]
             enhanced_feat = msa_module(feat)
             enhanced_feat_list.append(enhanced_feat)
-        #if temp_feat_list:
-            #enhanced_feat = self.msa_module(temp_feat_list[-1])
-        #else:
-            #raise ValueError("temp_feat_list is empty")
-
+       
         output = self.depth_pred(enhanced_feat_list[-1])
         return output
