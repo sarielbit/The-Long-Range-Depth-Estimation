@@ -22,7 +22,8 @@ To address this, we introduce a novel monocular depth estimation framework featu
 
 ### 📌 Architecture Overview
 
-📷 [![image](https://github.com/user-attachments/assets/2736fe56-3299-4fb9-85aa-364612fc581f)
+📷 [![总体架构1](https://github.com/user-attachments/assets/724e8152-0d8c-4ba0-ae4b-fd15c8a013d9)
+
 ]
 
 Illustration: Dual-branch Encoder (CNN + Transformer), CSF Fusion Module, DSUB & MSA-based Decoder
