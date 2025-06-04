@@ -224,8 +224,10 @@ class DenseDepthHead(DepthBaseDecodeHead):
                 # save earlier fusion target
                 up_channel_temp = up_channel
 
-        # 为每层特征创建对应的MSA模块实例，存储在列表中
+        
         self.msa_modules = nn.ModuleList([MSA(ch) for ch in self.in_channels])
+        
+        #self.msa_module = MSA(self.up_sample_channels[-1])  # 使用最后一层的通道数
 
     def forward(self, inputs, img_metas):
         """Forward function."""
@@ -260,13 +262,16 @@ class DenseDepthHead(DepthBaseDecodeHead):
                     temp_feat = self.conv_list[index](up_feat, skip_feat)
                     temp_feat_list.append(temp_feat)
 
-        # 使用对应的MSA模块对temp_feat_list中的每个特征进行特征增强
+        
         enhanced_feat_list = []
         for index, feat in enumerate(temp_feat_list):
             msa_module = self.msa_modules[index]
             enhanced_feat = msa_module(feat)
             enhanced_feat_list.append(enhanced_feat)
-
+        #if temp_feat_list:
+            #enhanced_feat = self.msa_module(temp_feat_list[-1])
+        #else:
+            #raise ValueError("temp_feat_list is empty")
 
         output = self.depth_pred(enhanced_feat_list[-1])
         return output
