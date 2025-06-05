@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/depth_swin.py', '../_base_/datasets/nyu.py',
+    '../_base_/models/depthformer_swin.py', '../_base_/datasets/nyu.py',
     '../_base_/default_runtime.py'
 ]
 
@@ -11,7 +11,7 @@ model = dict(
         num_heads=[6, 12, 24, 48],
         window_size=7),
     neck=dict(
-        type='CSFNeck',
+        type='HAHIHeteroNeckV34',   #In the paper, it is denoted as CSF Module
         positional_encoding=dict(
             type='SinePositionalEncoding', num_feats=256),
         in_channels=[64, 192, 384, 768, 1536],
@@ -19,7 +19,7 @@ model = dict(
         embedding_dim=512,
         scales=[1, 1, 1, 1, 1]),
     decode_head=dict(
-        type='DenseDepthHead1',
+        type='DenseDepthHead',
         act_cfg=dict(type='LeakyReLU', inplace=True),
         in_channels=[64, 192, 384, 768, 1536],
         up_sample_channels=[64, 192, 384, 768, 1536],
