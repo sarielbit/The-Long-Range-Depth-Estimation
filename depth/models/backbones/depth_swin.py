@@ -551,7 +551,7 @@ def build_conv_layer(cfg, *args, **kwargs):
     return layer
 
 @BACKBONES.register_module()
-class DepthSwin(BaseModule):
+class DepthFormerSwin(BaseModule):
     """ Swin Transformer
     A PyTorch implement of : `Swin Transformer:
     Hierarchical Vision Transformer using Shifted Windows`  -
@@ -632,8 +632,6 @@ class DepthSwin(BaseModule):
 
     def __init__(self,
                  pretrain_img_size=224,
-                 #depth=50,#############3
-                 #num_stages=1,####################
                  in_channels=3,
                  embed_dims=96,
                  patch_size=4,
@@ -664,7 +662,7 @@ class DepthSwin(BaseModule):
                  conv_dilations=(1, 1, 1, 1),
                  style='pytorch',
                  conv_pretrained=None):
-        super(DepthSwin, self).__init__()
+        super(DepthFormerSwin, self).__init__()
 
         self.conv_cfg = conv_cfg
         self.conv_norm_cfg = conv_norm_cfg
