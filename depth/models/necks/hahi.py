@@ -11,8 +11,8 @@ import typing as t
 from einops import rearrange
 import math
 
-
-class MSPM(nn.Module):
+#To clearly explain the mechanism of the SCSA module, it is denoted as MSPM in the paper.
+class SCSA(nn.Module):
     def __init__(
             self,
             dim: int,
@@ -27,7 +27,7 @@ class MSPM(nn.Module):
             attn_drop_ratio: float = 0.,
             gate_layer: str = 'sigmoid',
     ):
-        super(MSPM, self).__init__()
+        super(SCSA, self).__init__()
         self.dim = dim
         self.head_num = head_num
         self.head_dim = dim // head_num
@@ -135,8 +135,8 @@ class MSPM(nn.Module):
         attn = self.ca_gate(attn)
         return attn * x
 
-
-class CCF(nn.Module):
+#########To clearly explain the mechanism of the CCFF module, it is denoted as CCF in the paper.
+class CCFF(nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels,
@@ -144,7 +144,7 @@ class CCF(nn.Module):
                  expansion=1.0,
                  bias=None,
                  act="silu"):
-        super(CCF, self).__init__()
+        super(CCFF, self).__init__()
         hidden_channels = int(out_channels * expansion)
         self.conv1 = ConvNormLayer(in_channels, hidden_channels, 1, 1, bias=bias, act=act)
         self.conv2 = ConvNormLayer(in_channels, hidden_channels, 1, 1, bias=bias, act=act)
@@ -264,11 +264,10 @@ class RepVggBlock(nn.Module):
         t = (gamma / std).reshape(-1, 1, 1, 1)
         return kernel * t, beta - running_mean * gamma / std
 
-# 融合MSPM和CCF的新模块
-class MSPM_CCF_Fusion(nn.Module):
+class SCSA_CCFF_Fusion(nn.Module):
     def __init__(self,
-                 mspm_dim,
-                 mspm_head_num,
+                 scsa_dim,
+                 scsa_head_num,
                  in_channels,
                  out_channels,
                  num_blocks=3,
@@ -284,20 +283,20 @@ class MSPM_CCF_Fusion(nn.Module):
                  down_sample_mode='avg_pool',
                  attn_drop_ratio=0.,
                  gate_layer='sigmoid'):
-        super(MSPM_CCF_Fusion, self).__init__()
-        self.mspm = MSPM(mspm_dim, mspm_head_num, window_size, group_kernel_sizes, qkv_bias, fuse_bn, norm_cfg, act_cfg,
+        super(SCSA_CCFF_Fusion, self).__init__()
+        self.scsa = SCSA(scsa_dim, scsa_head_num, window_size, group_kernel_sizes, qkv_bias, fuse_bn, norm_cfg, act_cfg,
                          down_sample_mode, attn_drop_ratio, gate_layer)
-        self.ccf = CCF(in_channels, out_channels, num_blocks, expansion, bias, act)
+        self.ccff = CCFF(in_channels, out_channels, num_blocks, expansion, bias, act)
 
-        # 新增门控权重参数，用于融合两个模块的输出
+        
         self.gate_weight = nn.Parameter(torch.randn(1, 1, 1, 1))
 
     def forward(self, x):
-        mspm_output = self.mspm(x)
-        ccf_output = self.ccf(x)
+        scsa_output = self.scsa(x)
+        ccff_output = self.ccff(x)
 
-        # 应用门控权重进行特征融合输出
-        fused_output = mspm_output * self.gate_weight + ccf_output * (1 - self.gate_weight)
+        
+        fused_output = scsa_output * self.gate_weight + ccff_output * (1 - self.gate_weight)
         return fused_output
 
 class Mix(nn.Module):
@@ -313,11 +312,12 @@ class Mix(nn.Module):
         out = fea1 * mix_factor.expand_as(fea1) + fea2 * (1 - mix_factor.expand_as(fea2))
         return out
 
-class GLCattention(nn.Module):
+#To clearly explain the mechanism of the FCA module, it is denoted as GLC in the paper.
+class FCAttention(nn.Module):
     def __init__(self,channel,b=1, gamma=2):
-        super(GLCattention, self).__init__()
-        self.avg_pool = nn.AdaptiveAvgPool2d(1)#全局平均池化
-        #一维卷积
+        super(FCAttention, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        
         t = int(abs((math.log(channel, 2) + b) / gamma))
         k = t if t % 2 else t + 1
         self.conv1 = nn.Conv1d(1, 1, kernel_size=k, padding=int(k / 2), bias=False)
@@ -343,10 +343,10 @@ class GLCattention(nn.Module):
         return input*out
 
 @NECKS.register_module()
-class CSFNeck(BaseModule):
-    """
+class HAHIHeteroNeckV34(BaseModule):
+    """HAHIHeteroNeck.
 
-        
+        HAHI in `DepthFormer <https://arxiv.org/pdf/2203.14211>`_. For heterogenenious cnn- and transformer- features.
 
     Args:
         in_channels (List[int]): Number of input channels per scale.
@@ -373,7 +373,7 @@ class CSFNeck(BaseModule):
                  cross_att=True,
                  self_att=True,
                  num_points=8):
-        super(CSFNeck, self).__init__()
+        super(HAHIHeteroNeckV34, self).__init__()
         assert isinstance(in_channels, list)
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -390,19 +390,19 @@ class CSFNeck(BaseModule):
                            norm_cfg=norm_cfg,
                            act_cfg=act_cfg))
 
-        # 为每一层特征创建对应的门控融合模块（MSPM_CCF_Fusion）
+        
         self.fusion_modules = nn.ModuleList([
-            MSPM_CCF_Fusion(
-                mspm_dim=out_channel,
-                mspm_head_num=4,  # 这里示例设置头数为4，可根据实际调整
+            SCSA_CCFF_Fusion(
+                scsa_dim=out_channel,
+                scsa_head_num=4,  
                 in_channels=out_channel,
                 out_channels=out_channel
             ) for out_channel in out_channels
         ])
 
-        # 为每一层特征创建对应的GLC模块
-        self.glc_modules = nn.ModuleList([
-            GLCattention(channel=out_channel) for out_channel in out_channels
+        
+        self.fca_modules = nn.ModuleList([
+            FCAttention(channel=out_channel) for out_channel in out_channels
         ])
 
     # init weight
@@ -426,13 +426,13 @@ class CSFNeck(BaseModule):
             for i, lateral_conv in enumerate(self.lateral_convs)
         ]
 
-        # 对每层特征应用GLC模块进行特征增强
+        
         feats_enhanced = [
-            self.glc_modules[i](feat)
+            self.fca_modules[i](feat)
             for i, feat in enumerate(feats_projed)
         ]
 
-        # 对每层特征应用门控融合模块进行特征融合与增强
+        
         feats_fused = [
             self.fusion_modules[i](feat)
             for i, feat in enumerate(feats_enhanced)
