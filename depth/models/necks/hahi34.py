@@ -344,10 +344,9 @@ class FCAttention(nn.Module):
 
 @NECKS.register_module()
 class HAHIHeteroNeckV34(BaseModule):
-    """HAHIHeteroNeck.
+    """HAHIHeteroNeckV34, In the paper, it is denoted as CSF.
 
-        HAHI in `DepthFormer <https://arxiv.org/pdf/2203.14211>`_. For heterogenenious cnn- and transformer- features.
-
+        
     Args:
         in_channels (List[int]): Number of input channels per scale.
         out_channels (int): Number of output channels.
