@@ -226,8 +226,8 @@ class DenseDepthHead24(DepthBaseDecodeHead):
                 up_channel_temp = up_channel
 
         
-        #self.ema_modules = nn.ModuleList([EMA(ch) for ch in self.in_channels])
-        self.ema_module = EMA(self.up_sample_channels[-1])
+        self.ema_modules = nn.ModuleList([EMA(ch) for ch in self.in_channels])
+        #self.ema_module = EMA(self.up_sample_channels[-1])
 
 
     def forward(self, inputs, img_metas):
@@ -264,12 +264,12 @@ class DenseDepthHead24(DepthBaseDecodeHead):
                     temp_feat_list.append(temp_feat)
 
         
-        #enhanced_feat_list = []
-        #for index, feat in enumerate(temp_feat_list):
-            #ema_module = self.ema_modules[index]
-            #enhanced_feat = ema_module(feat)
-            #enhanced_feat_list.append(enhanced_feat)
-        enhanced_feat = self.ema_module(temp_feat_list[-1])
-        output = self.depth_pred(enhanced_feat)
-        #output = self.depth_pred(enhanced_feat_list[-1])
+        enhanced_feat_list = []
+        for index, feat in enumerate(temp_feat_list):
+            ema_module = self.ema_modules[index]
+            enhanced_feat = ema_module(feat)
+            enhanced_feat_list.append(enhanced_feat)
+        #enhanced_feat = self.ema_module(temp_feat_list[-1])
+        #output = self.depth_pred(enhanced_feat)
+        output = self.depth_pred(enhanced_feat_list[-1])
         return output
