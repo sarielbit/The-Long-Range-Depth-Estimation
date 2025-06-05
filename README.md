@@ -184,10 +184,11 @@ If you find this work useful in your research, please consider citing:
 
 ```bibtex
 @misc{thelongrangedepth2025,
-  title={The Long-Range Depth Estimation Framework},
-  author={sarielbit},
+  title={Enhancing Long-Range Depth Estimation via Dual-Branch CNN-Transformer Integration and Multi-Dimensional Feature Fusion},
+  author={Yunhao Chen and Qian Yin},
+  journal={The Visual Computer},
   year={2025},
-  note={https://github.com/your-repo/The-Long-Range-Depth-Estimation}
+  note={Submitted}
 }
 ```
 
