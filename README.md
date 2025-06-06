@@ -64,7 +64,7 @@ Tested with:
 
 * PyTorch 1.8.0
 * CUDA 11.1
-* Python 3.7
+* Python 3.8
 * Ubuntu 20.04
 
 If your environment is similar, follow these steps:
