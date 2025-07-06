@@ -22,7 +22,8 @@ To address this, we introduce a novel monocular depth estimation framework featu
 
 ### 📌 Architecture Overview
 
-📷 [![总体架构1](https://github.com/user-attachments/assets/724e8152-0d8c-4ba0-ae4b-fd15c8a013d9)
+📷 [![总体架构72](https://github.com/user-attachments/assets/5b263f37-6a7a-4556-9068-826a34709b66)
+)
 
 ]
 
