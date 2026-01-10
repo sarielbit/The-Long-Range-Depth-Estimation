@@ -35,8 +35,8 @@ Illustration: Dual-branch Encoder (CNN + Transformer), CSF Fusion Module, DSUB &
 
 | Dataset       | Abs-Rel 🔽 | RMSE 🔽   | Notes                                                      |
 | :------------ | :--------- | :-------- | :--------------------------------------------------------- |
-| **KITTI**     | **0.050**  | **2.111** | [checkpoints]( https://pan.baidu.com/s/13IHEyAniLHMEprWKYINkXw?pwd=a6k6 code: a6k6) |
-| **NYU-Depth** | **0.096**  | **0.329** | [checkpoints](https://xxx.com/nyu_swinl_w7_22k.pth "NYU-Depth v2数据集预训练权重") |
+| **KITTI**     | **0.050**  | **2.111** | [checkpoints]( https://pan.baidu.com/s/13IHEyAniLHMEprWKYINkXw?pwd=a6k6 password: a6k6) |
+| **NYU-Depth** | **0.096**  | **0.329** | [checkpoints](https://pan.baidu.com/s/17VKgtfN03RZH4v2VJoGmdg?pwd=9jc4 password: 9jc4) |
 | **SUN RGB-D** | **0.142**  | **0.433** | Using NYU pre-trained weights, shows strong generalization |
 
 ---
