@@ -12,7 +12,7 @@ Despite significant advancements in deep neural networks, accurately estimating 
 To address this, we introduce a novel monocular depth estimation framework featuring:
 
 * **novel heterogeneous hybrid encoder that integrates the initial convolutions of ResNet-50 with the hierarchical self-attention mechanism of Swin-Transformer. This approach balances local detail modeling with the capture of long-range context dependencies, effectively enhancing the expression of depth features in complex environments and distant regions.
-* A **Cross-Dimensional Feature Fusion (CSF) Module** for enhanced global depth understanding.
+* A **Cross-dimensional Feature Fusion (CSF) Module** for enhanced global depth understanding.
 * In the decoder, a **Depthwise Separable Upsampling Block (DSUB)** and **Multi-Scale Self-Attention Module (MSA)** to refine upsampling and recover detailed spatial information.
 
 **Experimental results** demonstrate superior long-range prediction accuracy on KITTI and SUN RGB-D datasets.
